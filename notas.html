@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <script src="https://unpkg.com/vue@2"></script>
+
+    <style>
+        html, body{
+            margin: 0;
+            padding: 0;
+        }
+        #app{
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: cover;
+            background: url('https://wallpapers.com/images/featured/4k-branco-i308ljad82204626.jpg');
+        }
+        .olympics{
+            position: absolute;
+            top: 70px;
+        }
+        li{
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        #button_visible{
+            display: none;
+        }
+        #mensagem{
+            display: none;
+        }
+        #mensagem div{
+            display: flex;
+            align-items: center;
+        }
+        #mensagem img{
+            width: 25px;
+        }
+        #mensagem p{
+            margin: 0;
+            margin-left: 40%;
+        }
+        #p{
+            color: red;
+            display: none;
+        }
+    </style>
+
+
+</head>
+<body>
+    <div id="app" style="display: flex; align-items: center; height: 100vh; flex-direction: column;">
+        <img src="./imgs/olympics.png" alt="" class="olympics" width="100px">
+        <h1 style="margin-top: 35vh;">Notas</h1>
+        <ul class="list-group mb-3" style="width: 30%;">
+            <div class="input-group-prepend" v-for="(item, index) in sortedItems" :key="index">
+                <span class="input-group-text" style="width: 8%;" id="basic-addon1">{{ index + 1 }}</span>
+                <li class="list-group-item" style="width: 72%;">{{ item.nome }}</li>
+                <input type="text" class="form-control" placeholder="N1" style="width: 10%;" v-model="item.nota1" :disabled="input1Disabled">
+                <input type="text" class="form-control" placeholder="N2" style="width: 10%;" v-model="item.nota2" :disabled="input1Disabled">
+            </div>
+        </ul>
+        <div id="div_hidden" class="input-group mb-3" style="width: 30%;">
+            <input type="text" id="input" class="form-control" placeholder="Novo item" v-model="newItem" @keyup.enter="addItem" :disabled="input2Disabled"/>
+            <div class="input-group-append">
+                <button class="btn btn-primary" @click="addItem" :disabled="input2Disabled">Adicionar</button>
+            </div>
+        </div>
+        <p id="p">* É necessário cadastrar pelo menos 3 participantes!</p>
+        <button id="button_hidden" @click="cadastrarParticipantes" class="btn btn-primary" style="width: 30%;">
+            Cadastrar participantes
+        </button>
+        <button id="button_visible" @click="finalizar" class="btn btn-primary" style="width: 30%;">
+            Finalizar
+        </button>
+        <div id="mensagem">
+            <div>
+                <img src="./imgs/gold.png" alt="">
+                <p>{{primeiroLugar}}</p>
+            </div>
+            <div>
+                <img src="./imgs/silver.png" alt="">
+                <p>{{segundoLugar}}</p>
+            </div>
+            <div>
+                <img src="./imgs/bronze.png" alt="">
+                <p>{{terceiroLugar}}</p>
+            </div>
+        </div>
+    </div>
+
+
+    <script type="text/javascript">
+
+        new Vue({
+            el: '#app',
+            data: {
+                items: [],
+                newItem: '',
+                input1Disabled: true,
+                input2Disabled: false,
+                primeiroLugar: '',
+                segundoLugar: '',
+                terceiroLugar: ''
+            },
+            computed:{
+                sortedItems(){
+                    return this.items.slice().sort((a, b) => {
+                        const maxA = Math.max(parseFloat(a.nota1) || 0, parseFloat(a.nota2) || 0);
+                        const maxB = Math.max(parseFloat(b.nota1) || 0, parseFloat(b.nota2) || 0);
+                        const secondMaxA = Math.min(parseFloat(a.nota1) || 0, parseFloat(a.nota2) || 0);
+                        const secondMaxB = Math.min(parseFloat(b.nota1) || 0, parseFloat(b.nota2) || 0);
+                        if (maxA > maxB) return -1;
+                        if (maxA < maxB) return 1;
+                        if (secondMaxA > secondMaxB) return -1;
+                        if (secondMaxA < secondMaxB) return 1;
+                        return 0;
+                    });
+                }
+            },
+            methods: {
+                addItem() {
+                    if (this.newItem.trim() !== '') {
+                        this.items.push({nome: this.newItem.trim(), nota1: '', nota2: ''});
+                        this.newItem = '';
+                        document.getElementById('p').style.display = 'none';
+                    }
+                },
+                cadastrarParticipantes(){
+                    if(this.sortedItems[2] == undefined){
+                        document.getElementById('p').style.display = 'block';
+                    }
+                    else{
+                        this.input1Disabled = false;
+                        this.input2Disabled = true;
+                        document.getElementById('div_hidden').style.display = "none";
+                        document.getElementById('button_hidden').style.display = "none";
+                        document.getElementById('button_visible').style.display = "block";
+                    }
+                },
+                finalizar(){
+                    this.input1Disabled = true;
+                    document.getElementById('button_visible').style.display = "none";
+                    document.getElementById('mensagem').style.display = "block";
+                    this.primeiroLugar = this.sortedItems[0].nome;
+                    this.segundoLugar = this.sortedItems[1].nome;
+                    this.terceiroLugar = this.sortedItems[2].nome;
+
+                }
+            }
+        })
+    </script>
+</body>
+</html>

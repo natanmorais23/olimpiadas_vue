@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <script src="https://unpkg.com/vue@2"></script>
+    <link rel="stylesheet" href="./placar.css">
+    <style>
+        #app{
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: cover;
+        }
+        .acabou{
+            visibility: hidden;
+            font-size: 1.25em;
+            color: white;
+            font-weight: 700;
+            font-family: monospace;
+        }
+        .flag{
+            width: 50px;
+            border: 1px solid;
+        }
+        .olympics{
+            position: absolute;
+            top: 70px;
+        }
+        #opcoes{
+            position: absolute;
+            top: 140px;
+        }
+        #p{
+            position: absolute;
+            top: 170px;
+            color: red;
+            visibility: hidden;
+        }
+        #button{
+            background-color: #1e90ff;
+            transition: background-color 0.3s ease;
+            outline: none;
+            border: none;
+        }
+        #button:hover{
+            background-color: #0c5fb3;
+        }
+    </style>
+</head>
+<body>
+    <div id="app" style="display: flex; justify-content: center; align-items: center; height: 100vh; flex-direction: column;" :style="{ backgroundImage: 'url(' + imagemFundo + ')' }">
+        <img src="./imgs/olympics.png" alt="" class="olympics" width="100px">
+        <select id="opcoes" @change="atualizarPontosLimite()" :disabled="selectDisabled">
+            <option value="0">Selecione o esporte</option>
+            <option value="25">Vôlei</option>
+            <option value="21">Vôlei de praia</option>
+            <option value="11">Tênis de mesa</option>
+        </select>
+        <p id="p">* Campo obrigatório!</p>
+        <div class="input-group mb-3" style="justify-content: center;">
+            <img v-if="mostrarBandeiras && flag1" :src="flag1" class="flag" alt="">
+            <div class="form-floating" style="display: flex; width: 18%;">
+                <input type="text" class="form-control" id="floatingInputGroup1" placeholder="País 1" ref="input1" v-model="pais1" @blur="fetchCountryData(1)">
+            </div>
+            <button style="background-color: #191970; color: white;" ref="sets1" disabled class="input-group-text">{{sets1}}</button>
+            <button id="button" style="color: white; cursor: pointer;" @click="aumentarPontuacao1" ref="button1" disabled class="input-group-text">{{pontos1}}</button>
+        </div>
+        <div class="input-group mb-3" style="justify-content: center;">
+             <img v-if="mostrarBandeiras && flag2" :src="flag2" class="flag" alt="">
+            <div class="form-floating" style="display: flex; width: 18%;">
+              <input type="text" class="form-control" id="floatingInputGroup1" placeholder="País 2" ref="input2" v-model="pais2" @blur="fetchCountryData(2)">
+            </div>
+            <button style="background-color: #191970; color: white;" ref="sets2" disabled class="input-group-text">{{sets2}}</button>
+            <button id="button" style="color: white; cursor: pointer;" @click="aumentarPontuacao2" ref="button2" disabled class="input-group-text">{{pontos2}}</button>
+        </div>
+        <button @click="cadastrarPaises" id="botaoCadastro" type="button" class="btn btn-secondary" style="width: 16.5%;">Cadastrar países</button>
+
+        <div id="gameOver" class="acabou">
+            <h1>Fim de jogo!</h1>
+        </div>
+
+        <div class="progress" style="width: 25%; margin-top: 10%; position: absolute; bottom: 30%;">
+            <div style="position: absolute; width: 100%;">
+                <h4 style="color: black;text-align: center;font-size: 13px;height: 100%; margin: auto; justify-content: center;">{{pais1}}</h4>
+            </div>
+            <div class="progress-bar" role="progressbar" :style="{width: largura1}" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+        </div>
+        <div class="progress" style="width: 25%; margin-top: 10%; position: absolute; bottom: 25%;">
+            <div style="position: absolute; width: 100%;">
+                <h4 style="color: black;text-align: center;font-size: 13px;height: 100%; margin: auto; justify-content: center;">{{pais2}}</h4>
+            </div>
+            <div class="progress-bar" role="progressbar" :style="{width: largura2}" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">
+            </div>
+        </div>
+          
+
+    </div>
+
+
+    <script type="text/javascript">
+
+        new Vue({
+            el: '#app',
+            data: {
+                pais1: 'País 1',
+                pais2: 'País 2',
+                paisNome1: '',
+                paisNome2: '',
+                flag1: '',
+                flag2: '',
+                vencedor: '',
+                sets1: 0,
+                sets2: 0,
+                pontos1: 0,
+                pontos2: 0,
+                largura1: '0%',
+                largura2: '0%',
+                mostrarBandeiras: false,
+                maiorSet: '',
+                menorSet: '',
+                pontosLimite: 0,
+                selectDisabled: false,
+                imagemFundo: 'https://img.freepik.com/vetores-gratis/fundo-branco-monocromatico-de-estilo-de-papel_52683-66443.jpg'
+            },
+            methods:{
+                cadastrarPaises: function() {
+                    if(this.pontosLimite == 0){
+                        document.getElementById('p').style.visibility = 'visible';
+                    }
+                    else{
+                        const pais1 = this.pais1;
+                        const pais2 = this.pais2;
+                        this.$refs.input1.disabled = true;
+                        this.$refs.input2.disabled = true;
+                        document.getElementById('botaoCadastro').style.visibility = "hidden";
+                        this.$refs.button1.disabled = false;
+                        this.$refs.button2.disabled = false;
+                        this.mostrarBandeiras = true;
+                        this.selectDisabled = true;
+                    }
+                },
+                atualizarPontosLimite: function(){
+                    this.pontosLimite = document.getElementById('opcoes').value;
+                    if(this.pontosLimite == 11){
+                        this.imagemFundo = 'https://wallpapers.com/images/hd/table-tennis-background-iyy8ftpy9y1mw31u.jpg';
+                    }
+                    else if(this.pontosLimite == 25){
+                        this.imagemFundo = 'https://wallpapers.com/images/hd/serving-ball-volleyball-4k-v5ogbcyr6r6ravf3.jpg';
+                    }
+                    else if(this.pontosLimite == 21){
+                        this.imagemFundo = 'https://i3.wp.com/wallpapers.com/images/hd/aesthetic-beach-volleyball-and-lifeguard-post-d611k2u3tfbnmceg.jpg?ssl=1';
+                        document.getElementById('gameOver').style.color = 'black';
+                    }
+                    else{
+                        this.imagemFundo = 'https://img.freepik.com/vetores-gratis/fundo-branco-monocromatico-de-estilo-de-papel_52683-66443.jpg';
+                    }
+                    if(this.pontosLimite != 0){
+                        document.getElementById('p').style.visibility = 'hidden';
+                    }
+                },
+                aumentarPontuacao1: function() {
+                    this.pontos1 += 1;
+                    document.getElementById('gameOver').style.visibility = 'hidden';
+                    if(this.pontos1 == this.pontosLimite){
+                        this.sets1 += 1;
+                        let i = document.getElementById('gameOver');
+                        i.style.visibility = "visible";
+                        document.getElementById('gameOver').innerHTML = `${this.pais1} ganhou o set!`;
+                        this.zerarPontos();
+                        this.definirLargura();
+                        if(this.sets1 == 3){
+                            this.acabarJogo();
+                        }
+                    }
+                },
+                aumentarPontuacao2: function() {
+                    this.pontos2 += 1;
+                    document.getElementById('gameOver').style.visibility = 'hidden';
+                    if(this.pontos2 == this.pontosLimite){
+                        this.sets2 += 1;
+                        let i = document.getElementById('gameOver');
+                        i.style.visibility = "visible";
+                        document.getElementById('gameOver').innerHTML = `${this.pais2} ganhou o set!`;
+                        this.zerarPontos();
+                        this.definirLargura();
+                        if(this.sets2 == 3){
+                            this.acabarJogo();
+                        }
+                    }
+                },
+                zerarPontos: function(){
+                    this.pontos1 = 0;
+                    this.pontos2 = 0;
+                },
+                acabarJogo: function(){
+                    if(this.sets1 == 3 || this.sets2 == 3){
+                        this.$refs.button1.disabled = true;
+                        this.$refs.button2.disabled = true;
+                        let i = document.getElementById('gameOver');
+                        i.style.visibility = "visible";
+                        this.verificarVencedor();
+                    }
+                },
+                verificarVencedor(){
+                    if(this.sets1 == 3){
+                         this.vencedor = this.pais1;
+                         this.maiorSet = this.sets1;
+                         this.menorSet = this.sets2;
+                    }
+                    if(this.sets2 == 3){
+                        this.vencedor = this.pais2;
+                        this.maiorSet = this.sets2;
+                        this.menorSet = this.sets1;
+                    }
+                    document.getElementById('gameOver').innerHTML = `${this.vencedor} ganhou o jogo por ${this.maiorSet} sets a ${this.menorSet}!`;
+                },
+                definirLargura(){
+                    this.largura1 = (this.sets1 / 3 * 100) + '%';
+                    this.largura2 = (this.sets2 / 3 * 100) + '%';
+                },
+                fetchCountryData(index) {
+                    const countryName = index === 1 ? this.pais1 : this.pais2;
+                    const apiUrl = `https://restcountries.com/v3.1/name/${countryName}?fullText=true`;
+
+                    fetch(apiUrl)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data && data.length > 0) {
+                                const country = data[0];
+                                if (index === 1) {
+                                    this.paisNome1 = country.name.common;
+                                    this.flag1 = country.flags.png;
+                                } else {
+                                    this.paisNome2 = country.name.common;
+                                    this.flag2 = country.flags.png;
+                                }
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Erro ao buscar dados do país:', error);
+                            if (index === 1) {
+                                this.paisNome1 = '';
+                                this.flag1 = '';
+                                mostrarBandeiras = true;
+                            } else {
+                                this.paisNome2 = '';
+                                this.flag2 = '';
+                                mostrarBandeiras = true;
+                            }
+                        });
+                }
+            }
+        })
+    </script>
+</body>
+</html>
