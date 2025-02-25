@@ -1,11 +1,16 @@
 # Placar Olímpico
 
+Este projeto possui dois sistemas distintos: o **Sistema de Placar** e o **Sistema de Notas**. Ambos são desenvolvidos utilizando **Vue.js** e **Bootstrap**, e oferecem funcionalidades interativas para registrar resultados de competições e classificar participantes.
 
--- Sistema de Placar --
+---
 
-Inspirado nas Olimpíadas, este é um sistema de controle de placar interativo desenvolvido utilizando **Vue.js** e **Bootstrap**, projetado para registrar e exibir o desempenho de dois países em competições de esportes olímpicos, como vôlei, vôlei de praia e tênis de mesa. O sistema permite que o usuário selecione o esporte, cadastre os países participantes, registre os pontos e sets, e visualize o vencedor após o término do jogo.
+## Sistema de Placar
 
-## Funcionalidades
+Inspirado nas Olimpíadas, este sistema de controle de placar interativo permite registrar e exibir o desempenho de dois países em competições de esportes olímpicos, como vôlei, vôlei de praia e tênis de mesa. 
+
+![Placar](./imgs/placar.png)
+
+### Funcionalidades
 
 - **Seleção de Esporte**: O usuário pode escolher entre diferentes esportes olímpicos:
   - Vôlei (pontos limite de 25)
@@ -20,7 +25,6 @@ Inspirado nas Olimpíadas, este é um sistema de controle de placar interativo d
 
 - **Mudança de Fundo**: O fundo da página é alterado automaticamente dependendo do esporte selecionado.
 
-
 ### Passos para Utilização
 
 1. **Selecione o Esporte**: No menu suspenso, escolha o esporte desejado.
@@ -29,12 +33,13 @@ Inspirado nas Olimpíadas, este é um sistema de controle de placar interativo d
 4. **Final do Jogo**: O jogo terminará quando um dos times alcançar 3 sets. O vencedor será exibido com o resultado final.
 5. **Alterações de Esporte**: Ao alterar o esporte, o fundo da página será alterado automaticamente de acordo com o esporte escolhido.
 
+---
 
--- Sistema de Notas -- 
+## Sistema de Notas
 
-Este projeto é uma aplicação interativa de notas e placar para participantes, desenvolvido com **Vue.js** e **Bootstrap**. Ele permite registrar e ordenar as notas de múltiplos participantes, visualizando o vencedor ao final com base nas notas inseridas.
+Este projeto é uma aplicação interativa de notas e placar para participantes, permitindo registrar e ordenar as notas de múltiplos participantes, visualizando o vencedor ao final com base nas notas inseridas.
 
-## Funcionalidades
+### Funcionalidades
 
 - **Cadastro de Participantes**: 
    - O usuário pode adicionar participantes à lista.
@@ -47,7 +52,6 @@ Este projeto é uma aplicação interativa de notas e placar para participantes,
    - Após adicionar pelo menos 3 participantes, o botão "Finalizar" se torna disponível.
    - O sistema exibe a classificação final (1º, 2º e 3º lugar) com medalhas de ouro, prata e bronze.
 
-
 ### Passos para Utilização
 
 1. **Adicionar Participantes**: No campo de texto, insira o nome do participante e pressione **Enter** ou clique em **Adicionar** para adicionar um novo participante.
@@ -55,7 +59,7 @@ Este projeto é uma aplicação interativa de notas e placar para participantes,
 3. **Registrar Notas**: Para cada participante, insira as notas nos campos **N1** e **N2**.
 4. **Finalizar e Exibir Resultados**: Clique no botão **Finalizar** quando todos os participantes tiverem suas notas inseridas. O sistema exibirá a classificação final com os 3 primeiros lugares, com medalhas de ouro, prata e bronze.
 
--- ... --
+---
 
 ## Estrutura do Código
 
@@ -70,6 +74,8 @@ Este projeto é uma aplicação interativa de notas e placar para participantes,
 ### Interação com API Externa
 - A API `https://restcountries.com` é utilizada para buscar o nome e as bandeiras dos países quando o usuário preenche os campos com os nomes dos países.
 
+---
+
 ## Tecnologias Utilizadas
 
 - **Vue.js**
@@ -77,10 +83,4 @@ Este projeto é uma aplicação interativa de notas e placar para participantes,
 - **Fetch API**
 - **CSS**
 
-## Como Rodar Localmente
-
-Para rodar o projeto localmente, basta seguir os seguintes passos:
-
-1. **Clone o repositório**:
-   ```bash
-   git clone https://github.com/seu-usuario/placar-olimpico.git
+---
