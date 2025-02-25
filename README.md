@@ -39,6 +39,8 @@ Inspirado nas Olimpíadas, este sistema de controle de placar interativo permite
 
 Este projeto é uma aplicação interativa de notas e placar para participantes, permitindo registrar e ordenar as notas de múltiplos participantes, visualizando o vencedor ao final com base nas notas inseridas.
 
+![Notas](./notas.png)
+
 ### Funcionalidades
 
 - **Cadastro de Participantes**: 
