@@ -8,7 +8,7 @@ Este projeto possui dois sistemas distintos: o **Sistema de Placar** e o **Siste
 
 Inspirado nas Olimpíadas, este sistema de controle de placar interativo permite registrar e exibir o desempenho de dois países em competições de esportes olímpicos, como vôlei, vôlei de praia e tênis de mesa. 
 
-![Placar](./imgs/placar.png)
+![Placar](./placar.png)
 
 ### Funcionalidades
 
